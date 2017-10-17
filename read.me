@@ -1,0 +1,77 @@
+## INSTALLING HADOOP on MAC
+
+1. Check if java exist : java -version
+   if not install java
+2. Do remote login : ssh localhost
+3. Download hadoop distribution : http://www.apache.org/dyn/closer.cgi/hadoop/common/
+4. Check where you java directory using : /usr/libexec/java_home
+5. Set java home directory : export JAVA_HOME={your java home directory}
+6. Set hadoop prefix directory: export HADOOP_PREFIX={your hadoop distribution directory}
+7. Go to hadoop downloaded directory : cd {your hadoop distribution directory}
+8. run this command to know hadoop command working with some instruction : bin/hadoop
+# we'll run hadoop in Pseudo-distributed mode
+9. Edit some config files
+    a. Edit etc/hadoop/core-site.xml
+   <configuration>
+       <property>
+           <name>fs.defaultFS</name>
+           <value>hdfs://localhost:9000</value>
+       </property>
+   </configuration>
+    b. Edit etc/hadoop/hdfs-site.xml:
+    <configuration>
+        <property>
+            <name>dfs.replication</name>
+            <value>1</value>
+        </property>
+    </configuration>
+    c. Edit etc/hadoop/mapred-site.xml:
+    <configuration>
+        <property>
+            <name>mapreduce.framework.name</name>
+            <value>yarn</value>
+        </property>
+    </configuration>
+    d. Edit etc/hadoop/yarn-site.xml:
+    <configuration>
+        <property>
+            <name>yarn.nodemanager.aux-services</name>
+            <value>mapreduce_shuffle</value>
+        </property>
+    </configuration>
+10. Do formatting
+    bin/hdfs namenode -format
+
+11. Start namenode and datanode
+    sbin/start-dfs.sh
+    #Name node can be browsed now : http://localhost:50070/
+12. Make the HDFS directories required to execute MapReduce jobs:
+    bin/hdfs dfs -mkdir /user
+    bin/hdfs dfs -mkdir /user/{username}
+13. Start ResourceManager daemon and NodeManager daemon:
+    sbin/start-yarn.sh
+    #Resource manager can be browsed at : http://localhost:8088/
+
+## STARTING HADOOP ONCE INSTALLED
+    a. sbin/start-dfs.sh : starts name node, data node and secondary node
+    b. sbin/start-yarn.sh
+
+## STOPPING DFS and YARN
+    sbin/stop-yarn.sh
+    sbin/stop-dfs.sh
+
+## Build maven jar : mvn clean install
+    i.e this will create jar in target path
+        ie. /Users/prem.b/.m2/repository/com/flipkart/MR/1.0-SNAPSHOT/MR-1.0-SNAPSHOT.jar
+
+## Put large input file in fs inputFolder
+    bin/hadoop fs -put <filePath> <inputFolder>
+    ie. sbin/hadoop fs -put ~/Documents/raw_1/MR/src/main/resources/wordcout.txt wordcount
+
+## Run MR job
+    bin/hadoop jar <Built jar path> <package-name-of-main-class> <input-folder-name> <output-folder-name>
+    bin/hadoop jar /Users/prem.b/.m2/repository/com/flipkart/MR/1.0-SNAPSHOT/MR-1.0-SNAPSHOT.jar com.flipkart.mr.poc.WordCount wordcount wordcountResult
+
+## Get result
+    bin/hadoop fs -cat <output-folder>/part-r-0*
+    ie. bin/hadoop fs -cat wordcountResult/part-r-00000
