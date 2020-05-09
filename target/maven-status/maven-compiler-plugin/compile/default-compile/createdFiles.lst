@@ -1,0 +1,9 @@
+com/flipkart/mr/reducer/WordCountReducer.class
+com/flipkart/mr/mapper/AvgByGenderMapper.class
+com/flipkart/mr/reducer/MinScoreReducer.class
+com/flipkart/mr/reducer/AvgByGenderReducer.class
+com/flipkart/mr/WordCount.class
+com/flipkart/mr/mapper/MinScoreMapper.class
+com/flipkart/mr/AvgByGender.class
+com/flipkart/mr/MinScore.class
+com/flipkart/mr/mapper/WordCountMapper.class

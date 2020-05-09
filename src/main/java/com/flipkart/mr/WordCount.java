@@ -14,7 +14,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 public class WordCount {
 
-    /*public static void main(String [] args) throws Exception {
+    public static void main(String [] args) throws Exception {
         Configuration c=new Configuration();
         String[] files=new GenericOptionsParser(c,args).getRemainingArgs();
         Path input=new Path(files[0]);
@@ -28,9 +28,9 @@ public class WordCount {
         FileInputFormat.addInputPath(j, input);
         FileOutputFormat.setOutputPath(j, output);
         System.exit(j.waitForCompletion(true)?0:1);
-    }*/
-    /*
-    public static class MapForWordCount extends Mapper<LongWritable, Text, Text, IntWritable>{
+    }
+
+  /*  public static class MapForWordCount extends Mapper<LongWritable, Text, Text, IntWritable> {
         public void map(LongWritable key, Text value, Context con) throws IOException, InterruptedException {
             String line = value.toString();
             String[] words=line.split(",");
@@ -40,8 +40,8 @@ public class WordCount {
                 con.write(outputKey, outputValue);
             }
         }
-    }*/
-   /* public static class ReduceForWordCount extends Reducer<Text, IntWritable, Text, IntWritable> {
+    }
+   public static class ReduceForWordCount extends Reducer<Text, IntWritable, Text, IntWritable> {
         public void reduce(Text word, Iterable<IntWritable> values, Context con) throws IOException, InterruptedException {
             int sum = 0;
             for(IntWritable value : values) {

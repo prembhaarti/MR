@@ -18,7 +18,7 @@
            <value>hdfs://localhost:9000</value>
        </property>
    </configuration>
-    b. Edit etc/hadoop/hdfs-site.xml:
+    b. Edit etc/hadoop/hdfs-site.xml: (location in hadoop repo)
     <configuration>
         <property>
             <name>dfs.replication</name>
@@ -30,6 +30,18 @@
         <property>
             <name>mapreduce.framework.name</name>
             <value>yarn</value>
+        </property>
+        <property>
+            <name>yarn.app.mapreduce.am.env</name>
+            <value>HADOOP_MAPRED_HOME=${HADOOP_HOME}</value>
+        </property>
+        <property>
+            <name>mapreduce.map.env</name>
+            <value>HADOOP_MAPRED_HOME=${HADOOP_HOME}</value>
+        </property>
+        <property>
+            <name>mapreduce.reduce.env</name>
+            <value>HADOOP_MAPRED_HOME=${HADOOP_HOME}</value>
         </property>
     </configuration>
     d. Edit etc/hadoop/yarn-site.xml:
@@ -44,7 +56,8 @@
 
 11. Start namenode and datanode
     sbin/start-dfs.sh
-    #Name node can be browsed now : http://localhost:50070/
+    #Name node can be browsed now : http://localhost:50070/ (hadoop 2.x) | http://localhost:9870 (hadoop 3.x)
+    #if having permission problem, use this -> cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 12. Make the HDFS directories required to execute MapReduce jobs:
     bin/hdfs dfs -mkdir /user
     bin/hdfs dfs -mkdir /user/{username}
@@ -60,6 +73,12 @@
     sbin/stop-yarn.sh
     sbin/stop-dfs.sh
 
+## Instead of above can do
+    sbin/stop-all.sh
+    sbin/start-all.sh
+
+## if datanode not start -> sudo rm -R /tmp/*
+
 ## Build maven jar : mvn clean install
     i.e this will create jar in target path
         ie. /Users/prem.b/.m2/repository/com/flipkart/MR/1.0-SNAPSHOT/MR-1.0-SNAPSHOT.jar
@@ -70,7 +89,7 @@
 
 ## Run MR job
     bin/hadoop jar <Built jar path> <package-name-of-main-class> <input-folder-name> <output-folder-name>
-    bin/hadoop jar /Users/prem.b/.m2/repository/com/flipkart/MR/1.0-SNAPSHOT/MR-1.0-SNAPSHOT.jar com.flipkart.mr.poc.WordCount wordcount wordcountResult
+    bin/hadoop jar /Users/prem.b/.m2/repository/com/flipkart/MR/1.0-SNAPSHOT/MR-1.0-SNAPSHOT.jar com.flipkart.mr.WordCount wordcount wordcountResult
 
 ## Get result
     bin/hadoop fs -cat <output-folder>/part-r-0*
